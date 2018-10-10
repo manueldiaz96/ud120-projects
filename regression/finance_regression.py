@@ -26,9 +26,9 @@ data = featureFormat( dictionary, features_list, remove_any_zeroes=True)
 target, features = targetFeatureSplit( data )
 
 ### training-testing split needed in regression, just like classification
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 feature_train, feature_test, target_train, target_test = train_test_split(features, target, test_size=0.5, random_state=42)
-train_color = "b"
+train_color = "r"
 test_color = "b"
 
 
@@ -38,11 +38,19 @@ test_color = "b"
 ### plots it correctly. Don't forget to change the test_color above from "b" to
 ### "r" to differentiate training points from test points.
 
+from sklearn.linear_model import LinearRegression
 
+reg = LinearRegression()
 
+reg.fit(feature_train, target_train)
 
+reg_score_train = reg.score(feature_train, target_train)
+reg_score_test = reg.score(feature_test, target_test)
 
-
+print "Reg coef: ", reg.coef_
+print "Reg intercept: ", reg.intercept_
+print "Reg score_test: ", reg_score_test
+print "Reg score_train: ", reg_score_train
 
 
 ### draw the scatterplot, with color-coded training and testing points
@@ -66,5 +74,11 @@ except NameError:
     pass
 plt.xlabel(features_list[1])
 plt.ylabel(features_list[0])
+
+reg.fit(feature_test, target_test)
+plt.plot(feature_train, reg.predict(feature_train), color="b") 
+
+print "New Slope: ", reg.coef_
+
 plt.legend()
 plt.show()
