@@ -36,6 +36,12 @@ def Draw(pred, features, poi, mark_poi=False, name="image.png", f1_name="feature
     plt.savefig(name)
     plt.show()
 
+def ScalerManu(arr, val):
+    max_val = max(arr)*1.0
+    min_val = min(arr)*1.0
+    
+    return (val-min_val)/(max_val-min_val)
+
 
 
 ### load in the dict of dicts containing all the data on each person in the dataset
@@ -61,7 +67,7 @@ poi, finance_features = targetFeatureSplit( data )
 ### (as it's currently written, the line below assumes 2 features)
 for f1, f2, _ in finance_features:
     plt.scatter( f1, f2 )
-plt.show()
+#plt.show()
 
 # https://www.rparthiban.com/articles/udacity/ud120_iml/9-clustering/
 
@@ -82,6 +88,12 @@ print min(eso_list)
 from sklearn.cluster import KMeans
 features_list = ["poi", feature_1, feature_2]
 data2 = featureFormat(data_dict, features_list )
+salary = data2[:,1]
+stock = data2[:,2]
+print(ScalerManu(salary, 2e5))
+print(ScalerManu(stock, 1e6))
+
+
 poi, finance_features = targetFeatureSplit( data2 )
 clf = KMeans(n_clusters=2)
 pred = clf.fit_predict( finance_features )
@@ -90,6 +102,7 @@ pred = clf.fit_predict( finance_features )
 ### rename the "name" parameter when you change the number of features
 ### so that the figure gets saved to a different file
 try:
-    Draw(pred, finance_features, poi, mark_poi=False, name="clusters.pdf", f1_name=feature_1, f2_name=feature_2)
+    a = 0#Draw(pred, finance_features, poi, mark_poi=False, name="clusters.pdf", f1_name=feature_1, f2_name=feature_2)
 except NameError:
     print "no predictions object named pred found, no clusters to plot"
+
